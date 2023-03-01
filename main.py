@@ -6,10 +6,6 @@ import base64
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
-if __name__ == '__main__':
-    app.run()
-
-
 @app.route('/app')
 def atapp():
     co2 = 1037
@@ -18,50 +14,39 @@ def atapp():
     return render_template("main.html",co2 = co2, airtemp = airtemp, airhumid = airhumid)
 
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template("index.html")
+conn = sqlite3.connect('data.db')
+c = conn.cursor()
+c.execute('''CREATE TABLE IF NOT EXISTS data
+             (timestamp DATETIME, co2 INTEGER, airTemp REAL, airHumidity REAL, led REAL)''')
+conn.commit()
 
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
 
-
-
-@app.route('/data_endpoint', methods=['POST'])
-def handle_data():
-    # Get the data from the POST request
-    data = request.data.decode('utf-8')
-
-    # Parse the data and store it in the database
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS sensor_data (temperature real, co2 real, humidity real)')
-    c.execute('INSERT INTO sensor_data VALUES (?, ?, ?)', data.split(','))
-
+@app.route('/data', methods=['POST'])
+def receive_data():
+    co2 = request.form['co2']
+    airTemp = request.form['airTemp']
+    airHumidity = request.form['airHumidity']
+    led = request.form['led']
+    c.execute("INSERT INTO data (timestamp, co2, airTemp, airHumidity, led) VALUES (datetime('now'), ?, ?, ?)",
+              (co2, airTemp, airHumidity, led))
     conn.commit()
-    conn.close()
-
     return 'Data received'
 
-@app.route('/plot/<column>')
-def plot_data(column):
-    # Retrieve the data from the database
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    c.execute(f'SELECT {column} FROM sensor_data')
-    data = c.fetchall()
-    conn.close()
+@app.route('/latest', methods=['GET'])
+def latest_data():
+    c.execute("SELECT * FROM data ORDER BY timestamp DESC LIMIT 1")
+    row = c.fetchone()
+    if row:
+        co2 = row[1]
+        airTemp = row[2]
+        airHumidity = row[3]
+        led = row[4]
+        return render_template('main.html', co2=co2, airTemp=airTemp, airHumidity=airHumidity,led=led)
+    else:
+        return 'No data'
 
-    # Create the plot
-    fig, ax = plt.subplots()
-    ax.plot(data)
-
-    # Convert the plot to a PNG image
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-
-    # Encode the PNG image as base64
-    data_uri = base64.b64encode(buffer.read()).decode('utf-8')
-
-    return f'<img src="data:image/png;base64,{data_uri}"/>'
-
-
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
