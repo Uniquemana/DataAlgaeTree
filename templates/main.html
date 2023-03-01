@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static', filename='appstyle.css')}}"/>
+    </head>
+    <body>
+        
+        <h1>Data.AlaeTree_V1</h1>
+
+
+        <div class="mid">
+            <div class="status">
+                <div class="co2">
+                    <div id="co2-veriable">
+                        {{co2}}
+                    </div>
+                </div>
+                <div class="airtemp">
+                    <div id="airtemp-veriable">
+                        {{airtemp}}
+                    </div> 
+                </div>
+                <div class="airhumid">
+                    <div id="airhumid-veriable">
+                        {{airhumid}}
+                </div>
+                
+            </div>
+        </div>
+    </body>
+</html>
