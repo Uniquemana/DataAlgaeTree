@@ -1,43 +1,102 @@
-body{
-    background-color: rgb(22, 37, 33);
-    }
-
-
-h1{
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 3em;
-    color: #AEF938;
-    text-align: center;
+body {
+  background-color: #f8f9fa;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  color: #212529;
 }
 
-.status{
-    margin: auto;
-    max-width: 70em;
-    max-height: fit-content;
-    border: 5px solid #c3c3c3;
-    flex-wrap: wrap;
-    align-items: center;
+h1 {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+}
 
+.data-container {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: center;
 }
-.co2{
-    margin: auto;
-    color: black;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: bold;
-    font-size: 8em;
 
+.data-container-inside {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 30px;
 }
-.airtemp{
-    margin: auto;
-    color: black;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: bold;
-    font-size: 2em;
+
+.airtemp-item,
+.airhumid-item,
+.co2-item {
+  margin-right: 30px;
 }
-.airhumid{
-    margin: auto;
-    color: black;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: bold;
-    font-size: 2em;
+
+.airtemp-label,
+.airhumid-label,
+.co2-label {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.airtemp-value,
+.airhumid-value,
+.co2-value {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.airtemp-value.low {
+  color: #2196f3;
+  background-color: #e3f2fd;
+}
+
+.airtemp-value.moderate {
+  color: #ffc107;
+  background-color: #fff8e1;
+}
+
+.airtemp-value.high {
+  color: #f44336;
+  background-color: #ffebee;
+}
+
+.airhumid-value.low {
+  color: #2196f3;
+  background-color: #e3f2fd;
+}
+
+.airhumid-value.moderate {
+  color: #ffc107;
+  background-color: #fff8e1;
+}
+
+.airhumid-value.high {
+  color: #f44336;
+  background-color: #ffebee;
+}
+
+.co2-value.low {
+  color: #2196f3;
+  background-color: #e3f2fd;
+}
+
+.co2-value.moderate {
+  color: #ffc107;
+  background-color: #fff8e1;
+}
+
+.co2-value.high {
+  color: #f44336;
+  background-color: #ffebee;
 }

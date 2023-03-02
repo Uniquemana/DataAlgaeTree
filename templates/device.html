@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Device {{ device_id }}</title>
+  </head>
+  <body>
+    <h1>Device {{ device_id }}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Variable 1</th>
+          <th>Variable 2</th>
+          <th>Variable 3</th>
+          <th>Variable 4</th>
+          <th>Variable 5</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for values in data %}
+          <tr>
+            <td>{{ values[0] }}</td>
+            <td>{{ values[1] }}</td>
+            <td>{{ values[2] }}</td>
+            <td>{{ values[3] }}</td>
+            <td>{{ values[4] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
