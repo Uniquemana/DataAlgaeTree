@@ -18,9 +18,9 @@ def receive_data():
     data_str = request.data.decode('utf-8')
     data_list = data_str.strip().split('\n')
     for data in data_list:
-        device_id, co2, air_temp, air_humid, led = data.split()
+        device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp,leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm ,led = data.split()
         # Update the data in the dictionary
-        device_data[device_id] = [(co2, air_temp, air_humid, led)]
+        device_data[device_id] = [(co2, air_temp, air_humid, leftwatertemp, rightwatertemp,leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led)]
     return 'Data received successfully'
 
 if __name__ == '__main__':
