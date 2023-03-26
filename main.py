@@ -39,7 +39,7 @@ def receive_data():
     for data in data_list:
         device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp,leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm ,led = data.split()
         # Insert the data into the database
-        cur.execute("INSERT INTO device_data (device_id, co2, airtemp, airhumid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp,leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led))
+        cur.execute("INSERT INTO device_data (device_id, co2, airtemp, airhumid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led) VALUES (%i, %f, %f, %f, %f, %f, %f, %f, %i, %i, %i)", (device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp,leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led))
     conn.commit()
     cur.close()
     return 'Data received and saved successfully'
