@@ -1,3 +1,19 @@
+@font-face{
+  font-family: 'algae-tree-main-font';
+  src: url('fonts/Arual.ttf')  format('truetype');
+}
+
+@font-face{
+  font-family: 'algae-tree-light-paragraph-font';
+  src: url('fonts/CeraProLight.otf')  format('opentype');
+}
+
+@font-face{
+  font-family: 'algae-tree-bold-paragraph-font';
+  src: url('fonts/CeraProBold.otf')  format('opentype');
+}
+
+
 body {
   background-color: #f8f9fa;
   font-family: 'Poppins', sans-serif;
@@ -11,6 +27,7 @@ h1 {
   font-size: 32px;
   font-weight: bold;
   text-align: center;
+  font-family: 'algae-tree-main-font';
 }
 
 .data-container {
@@ -40,6 +57,7 @@ h1 {
 .airtemp-label,
 .airhumid-label,
 .co2-label {
+  font-family: 'algae-tree-light-paragraph-font';
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -54,6 +72,7 @@ h1 {
   padding: 10px 20px;
   border-radius: 10px;
   margin-bottom: 10px;
+  font-family: 'algae-tree-bold-paragraph-font';
 }
 
 .airtemp-value.low {

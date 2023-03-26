@@ -1,0 +1,80 @@
+@font-face{
+    font-family: 'algae-tree-main-font';
+    src: url('fonts/Arual.ttf')  format('truetype');
+  }
+
+@font-face{
+    font-family: 'algae-tree-light-paragraph-font';
+    src: url('fonts/CeraProLight.otf')  format('opentype');
+    }
+@font-face{
+    font-family: 'algae-tree-bold-paragraph-font';
+    src: url('fonts/CeraProBold.otf')  format('opentype');
+    }
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    margin: 0 auto;
+    height: 100vh;
+    background: rgb(2,0,36);
+    background: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(41,82,71,1) 43%, rgba(174,249,56,1) 100%);
+    }
+.heading {
+    font-family: 'algae-tree-main-font';
+    font-size: 4em;
+    text-align: center;
+    padding-bottom: 2em;
+    color: rgba(174,249,56,1);
+
+}
+
+.contents {
+    display: inline;
+    align-items: center;
+    max-width: 200em;
+    height: 400px;
+    
+}
+::placeholder {
+   text-align: center; 
+}
+
+.form{
+    align-items: center;
+    display: inline-block;
+}
+
+input[type="text"] {
+    display: inline-block;
+    width: 200px;
+    height: 30px;
+    font-size: 16px;
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 50px;
+}
+.submit{
+    /* background-color: rgb(0, 122, 27); */
+    /* display: block; */
+    margin: auto;
+    font-family: 'algae-tree-light-paragraph-font';
+    color: black;
+    border-radius: 100px;
+    min-width: 100px;
+    min-height: 40px;
+    border: 2px solid #00AA66;
+    -webkit-transition: -webkit-transform 0.2s;
+	transition: -webkit-transform 0.2s;
+	transition: transform 0.2s;
+	transition: transform 0.2s, -webkit-transform 0.2s;
+}
+:hover.submit{
+    background-color: #00AA66;
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+    font-family: 'algae-tree-bold-paragraph-font';
+
+}

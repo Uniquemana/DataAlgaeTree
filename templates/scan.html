@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data-AlgaeTree</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='scanstyle.css')}}"/>
+    
+    <!-- <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet'> -->
+</head>
+<body>
+    
+    
+    <div class="contents">
+        <div class="heading">Data.Algae Tree</div>
+        
+        <div class="qr-code">
+        </div>
+        <form class="form">
+            <input type="text" class="device_id" id="device-id" name="device-id" placeholder="enter device id" maxlength="4" pattern="\d{4}" required>
+            <br>
+            <br>
+            <button type="submit" class="submit">FETCH</button>
+        </form>
+    </div>
+</body>
+</html>
