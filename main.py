@@ -22,7 +22,7 @@ def scan():
 @app.route('/<device_id>')
 def show_data(device_id):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM device_data WHERE device_id=%s", (device_id,))
+    cur.execute("SELECT * FROM device_data WHERE device_id=%s ORDER BY timestamp DESC LIMIT 1", (device_id,))
     data = cur.fetchall()
     if len(data) == 0:
         return 'No data available for device ' + device_id
