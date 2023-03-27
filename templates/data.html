@@ -5,39 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{url_for('static', filename='appstyle.css')}}"/>
+    <style>
+      body {
+        background-image: url("{{ url_for('static', filename='ATbg.png') }}");
+        /* Other CSS properties */
+      }
+    </style>
   </head>
   <body>
 
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <h1 class="text-center">Data for Device {{ device_id }}</h1>
+          <h1 class="text-center">Algae Tree {{ device_id }}</h1>
         </div>
       </div>
-      {% for row in data %}
+      {% if data %}
       <div class="row justify-content-center">
         <div class="col-md-6 col-lg-4 mb-3">
           <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title text-center mb-4">CO2</h5>
               <div class="d-flex justify-content-center align-items-center mb-4">
-                <div class="co2-value {% if row[0]|int < 1000 %}low{% elif row[0]|int < 2000 %}moderate{% else %}high{% endif%}">
-                  {{ row[0] }}
+                <div class="co2-value {% if data[0][0]|int < 1000 %}low{% elif data[0][0]|int < 2000 %}moderate{% else %}high{% endif%}">
+                  {{ data[0][1] }}
                 </div>
               </div>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="co2-label">Air Temperature</div>
-                <div class="airtemp-value">{{ row[1] }}&deg;C</div>
+                <div class="airtemp-value">{{ data[0][2] }}&deg;C</div>
               </div>
               <div class="d-flex justify-content-between align-items-center mt-2">
                 <div class="co2-label">Air Humidity</div>
-                <div class="airhumid-value">{{ row[2] }}%</div>
+                <div class="airhumid-value">{{ data[0][3] }}%</div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {% endfor %}
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-8 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title text-center mb-4">CO2 Data Chart</h5>
+              {% if graph_html %}
+                  <div>{{ graph_html|safe }}</div>
+                {% endif %}
+                {% else %}
+                <p>No data available for device {{ device_id }}.</p>
+                {% endif %}
+              <div class="chart-container">
+                <canvas id="co2Chart">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
