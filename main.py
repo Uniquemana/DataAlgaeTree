@@ -34,13 +34,16 @@ def receive_data():
     cur = conn.cursor()
     data_str = request.data.decode('utf-8')
     data_list = data_str.strip().split('\n')
-    for data in data_list:
-        device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led = data.strip().split('\t')
-        # Insert the data into the database
-        cur.execute("INSERT INTO device_data (device_id, co2, airtemp, airhumid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led))
-    conn.commit()
-    cur.close()
-    return 'Data received successfully'
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    try:
+        for data in data_list:
+            device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led = data.strip().split('\t')
+            # Insert the data into the database
+            cur.execute("INSERT INTO device_data (device_id, co2, airtemp, airhumid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (device_id, co2, air_temp, air_humid, leftwatertemp, rightwatertemp, leftheatertemp, rightheatertemp, leftheaterpwm, rightheaterpwm, led))
+        conn.commit()
+        return 'Data received successfully'
+    except Exception as e:
+        print('Error:', e)
+        conn.rollback()
+        return 'An error occurred while inserting data into the database'
+    finally:
+        cur.close()
