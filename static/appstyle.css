@@ -37,12 +37,13 @@ h5{
 }
 
 .card{
-  background-color: #68656f91;
+  background-color: rgba(104, 101, 111, 0.57);
 }
 
 .chart-container {
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
+  height: 30em;
 }
 
 .data-container {
@@ -135,3 +136,4 @@ h5{
   color: #f44336;
   background-color: #ffebee;
 }
+

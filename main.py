@@ -28,7 +28,7 @@ def show_data(device_id):
     if device_id == 'favicon.ico':
         return ''
     cur = conn.cursor()
-    cur.execute("SELECT timestamp, co2, airtemp, airhumid FROM device_data WHERE device_id=%s ORDER BY timestamp ASC", (device_id,))
+    cur.execute("SELECT timestamp, co2, airtemp, airhumid FROM device_data WHERE device_id=%s ORDER BY timestamp DESC", (device_id,))
     data = cur.fetchall()
     if len(data) == 0:
         return 'No data available for device ' + device_id
@@ -37,22 +37,22 @@ def show_data(device_id):
         co2_data = [d[1] for d in data]
         
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=timestamps, y=co2_data, mode='lines', name='CO2 Data'))
+        fig.add_trace(go.Scatter(x=timestamps, y=co2_data, mode='lines', name='CO2 Data', line=dict(color='#aff84e', width=2)))
         fig.update_layout(
-                        # title='CO2 Data for Device ' + device_id,
-                        xaxis_title='Timestamp',
-                        xaxis_title_font=dict(size=18, color='rgb(255, 255, 255)'),
-                        yaxis_title='CO2 Data',
-                        yaxis_title_font=dict(size=18, color='rgb(255, 255, 255)'),
-                        plot_bgcolor='rgba(255, 255, 255, 0.25)',
-                        paper_bgcolor='rgba(255, 255, 255, 0.25)',
-                        legend=dict(
-                            x=0,
-                            y=1.0,
-                            bgcolor='rgba(255, 255, 255, 0)',
-                            bordercolor='rgba(255, 255, 255, 0)'
-                        )
-                    )
+        xaxis_title_font=dict(size=18, color='rgb(255, 255, 255)'),
+        yaxis_title_font=dict(size=18, color='rgb(255, 255, 255)'),
+        xaxis_color='white',
+        yaxis_color='white',
+        plot_bgcolor='rgba(104, 101, 111, 0)',
+        paper_bgcolor='rgba(104, 101, 111, 0)',
+        autosize=True,
+        legend=dict(
+            x=0,  
+            y=1.0,
+            bgcolor='rgba(255, 255, 255, 0)',
+            bordercolor='rgba(255, 255, 255, 0)',
+        )
+        )       
         
         graph_html = pyo.plot(fig, output_type='div')
         return render_template('data.html', data=data, device_id=device_id, graph_html=graph_html)

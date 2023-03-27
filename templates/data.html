@@ -13,7 +13,7 @@
     </style>
   </head>
   <body>
-
+    
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
@@ -48,13 +48,14 @@
           <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title text-center mb-4">CO2 Data Chart</h5>
-              {% if graph_html %}
+              
+              <div class="chart-container">
+                {% if graph_html %}
                   <div>{{ graph_html|safe }}</div>
                 {% endif %}
                 {% else %}
                 <p>No data available for device {{ device_id }}.</p>
                 {% endif %}
-              <div class="chart-container">
                 <canvas id="co2Chart">
                 </canvas>
               </div>
@@ -62,8 +63,9 @@
           </div>
         </div>
       </div>
-      
     </div>
+
+    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
