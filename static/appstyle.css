@@ -1,4 +1,4 @@
-@font-face{
+ @font-face{
   font-family: 'algae-tree-main-font';
   src: url('fonts/Arual.ttf')  format('truetype');
 }
@@ -13,14 +13,211 @@
   src: url('fonts/CeraProBold.otf')  format('opentype');
 }
 
+h1{
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  font-family: 'algae-tree-main-font';
+}
+
+h5{
+  font-family: 'algae-tree-main-font';
+  font-size: 25px;
+}
+
+.card{
+  background-color: rgba(104, 101, 111, 0.57);
+}
+
+.grid-box {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  margin-bottom: 2rem;
+  }
+  
+  .grid-box .box {
+  background-color: #fff;
+  color: #000;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  }
+  
+  .grid-box .box .label {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  }
+  
+  @media (min-width: 576px) {
+  .grid-box {
+  grid-template-columns: repeat(3, 1fr);
+  }
+  }
+  
+  @media (min-width: 768px) {
+  .grid-box {
+  grid-template-columns: repeat(6, 1fr);
+  }
+  }
+  
+  /* adjust positioning of section1 and section2 */
+  .section1,
+  .section2 {
+  padding: 2rem;
+  box-sizing: border-box;
+  }
+  
+  .section1 {
+  grid-row: 1;
+  }
+  
+  .section2 {
+  grid-row: 2;
+  }
+  
+  @media (min-width: 576px) {
+  .section1,
+  .section2 {
+  padding: 4rem;
+  }
+  }
+  
+  /* style changes for the first box */
+  .co2-value {
+  font-size: 5rem;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 0;
+  font-family: 'algae-tree-bold-paragraph-font';
+  }
+  
+  .co2-label {
+  font-weight: bold;
+  font-size: 1.25rem;
+  text-align: center;
+  font-family: 'algae-tree-bold-paragraph-font';
+  }
+  
+  .airtemp-value,
+  .airhumid-value {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  font-family: 'algae-tree-bold-paragraph-font';
+  }
+  
+  .low {
+  color: green;
+  font-family: 'algae-tree-bold-paragraph-font';
+  }
+  
+  .moderate {
+  color: orange;
+  font-family: 'algae-tree-bold-paragraph-font';
+  }
+  
+  .high {
+  color: red;
+  font-family: 'algae-tree-bold-paragraph-font';
+  }
+  
+  /* new styles for the grid boxes */
+  .grid-box .box.co2 {
+  background-color: #e5f2f2;
+  font-family: 'algae-tree-light-paragraph-font';
+  }
+  
+  .grid-box .box.temp {
+  background-color: #f2e5e5;
+  font-family: 'algae-tree-light-paragraph-font';
+  }
+  
+  .grid-box .box.humidity {
+  background-color: #e5e5f2;
+  font-family: 'algae-tree-light-paragraph-font';
+  }
+  
+  /* adjust positioning of the chart container */
+  .chart-container {
+  margin-top: 2rem;
+  }
+  
+  @media (min-width: 576px) {
+  .chart-container {
+  margin-top: 4rem;
+  }
+  }
+  
+  @media (min-width: 768px) {
+  .chart-container {
+  margin-top: 6rem;
+  }
+  }
+  
+  /* add a new box class for the new boxes */
+  .box2 {
+  grid-row: 1;
+  grid-column: 2 / span 3;
+  }
+  
+.object-label{
+  font-family: 'algae-tree-light-paragraph-font';
+}
+.object-type{
+  font-family: 'algae-tree-light-paragraph-font';
+}
+.object-location{
+  font-family: 'algae-tree-light-paragraph-font';
+}
+  
+
+/* @font-face{
+  font-family: 'algae-tree-main-font';
+  src: url('fonts/Arual.ttf')  format('truetype');
+}
+
+@font-face{
+  font-family: 'algae-tree-light-paragraph-font';
+  src: url('fonts/CeraProLight.otf')  format('opentype');
+}
+
+@font-face{
+  font-family: 'algae-tree-bold-paragraph-font';
+  src: url('fonts/CeraProBold.otf')  format('opentype');
+}
+*/
 
 
 body {
-  /* background-color: #f8f9fa; */
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
   color: #f2f2f2;
 }
+
+/*
+.bgsections{
+  position: static;
+  display: grid;
+  height: auto;
+  width: 100%;
+  min-height: 3751px;
+  grid-template-rows: repeat(7, min-content) 2fr;
+  grid-template-columns: 100%;
+  padding-bottom: 0px;
+  box-sizing: border-box;
+  
+}
+
 
 h1 {
   margin-top: 30px;
@@ -44,6 +241,7 @@ h5{
   width: 100%;
   margin: 0 auto;
   height: 30em;
+  float: right;
 }
 
 .data-container {
@@ -136,4 +334,4 @@ h5{
   color: #f44336;
   background-color: #ffebee;
 }
-
+ */
