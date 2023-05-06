@@ -1,0 +1,61 @@
+@font-face{
+font-family: 'algae-tree-main-font';
+src: url('fonts/Arual.ttf')  format('truetype');
+}
+@font-face{
+font-family: 'algae-tree-light-paragraph-font';
+src: url('fonts/CeraProLight.otf')  format('opentype');
+}
+@font-face{
+font-family: 'algae-tree-bold-paragraph-font';
+src: url('fonts/CeraProBold.otf')  format('opentype');
+}
+
+body {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+background-color: #333;
+font-family: 'algae-tree-main-font';
+}
+.container {
+text-align: center;
+}
+h1 {
+color: #fff;
+font-size: 3rem;
+margin-bottom: 2rem;
+}
+form {
+display: inline-block;
+}
+input[type="text"] {
+font-size: 1rem;
+padding: 0.5rem;
+border-radius: 5px;
+border: 2px solid #AEF938;
+background-color: #444;
+color: #AEF938;
+outline: none;
+width: 200px;
+}
+input[type="submit"] {
+font-family: 'algae-tree-light-paragraph-font';
+font-size: 1rem;
+background-color: #AEF938;
+color: #333;
+padding: 0.5rem 1rem;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+margin-left: 1rem;
+outline: none;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+transition: all 0.3s ease;
+}
+input[type="submit"]:hover {
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+transform: translateY(-2px);
+}
