@@ -35,14 +35,14 @@ def show_data(device_id):
     last_row = None
     filtered_data = []
     for row in data[1:]:  # Exclude the header
-        if int(row[0]) == device_id:
+        if float(row[0]) == device_id:
             last_row = dict(zip(header, row))
             filtered_data.append(last_row)
 
     if last_row is None:
         return render_template('no_data.html', device_id=device_id)
     else:
-        co2_data = [int(d['co2']) for d in filtered_data]
+        co2_data = [float(d['co2']) for d in filtered_data]
 
         # Plotting code without timestamps
         fig = go.Figure()
