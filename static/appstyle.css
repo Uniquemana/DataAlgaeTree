@@ -112,7 +112,7 @@ h5{
   @media (min-width: 576px) {
   .section1,
   .section2 {
-  padding: 3rem;
+  padding: 1rem;
   }
   }
   
@@ -174,18 +174,19 @@ h5{
   
   /* adjust positioning of the chart container */
   .chart-container {
-  margin-top: 2rem;
+  margin-top: 0rem;
+  min-height: 35rem;
   }
   
   @media (min-width: 576px) {
   .chart-container {
-  margin-top: 4rem;
+  margin-top: 0rem;
   }
   }
   
   @media (min-width: 768px) {
   .chart-container {
-  margin-top: 6rem;
+  margin-top: 0rem;
   }
   }
   
