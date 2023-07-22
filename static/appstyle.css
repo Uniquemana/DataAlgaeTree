@@ -196,12 +196,20 @@ h5{
   grid-column: 2 / span 3;
   }
   
-.object-label{
-  font-family: 'algae-tree-light-paragraph-font';
-}
 .object-type{
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  font-family: 'algae-tree-bold-paragraph-font';
+}
+
+.object-label{
+  font-weight: bold;
+  font-size: 1.25rem;
+  text-align: center;
   font-family: 'algae-tree-light-paragraph-font';
 }
+
 .object-location{
   font-family: 'algae-tree-light-paragraph-font';
 }

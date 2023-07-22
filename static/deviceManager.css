@@ -1,0 +1,146 @@
+@font-face{
+    font-family: 'algae-tree-main-font';
+    src: url('fonts/Arual.ttf')  format('truetype');
+  }
+  
+  @font-face{
+    font-family: 'algae-tree-light-paragraph-font';
+    src: url('fonts/CeraProLight.otf')  format('opentype');
+  }
+  
+  @font-face{
+    font-family: 'algae-tree-bold-paragraph-font';
+    src: url('fonts/CeraProBold.otf')  format('opentype');
+  }
+  h1{
+    margin-top: 0.7rem;
+    margin-bottom: 0.5rem;
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'algae-tree-main-font';
+    color: #fff;
+  }
+  
+  h2{
+    margin-top: 0.2rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'algae-tree-light-paragraph-font';
+    color: #AEF938;
+  }
+  
+  h5{
+    font-family: 'algae-tree-light-paragraph-font';
+    font-size: 25px;
+  }
+  
+  .mb-4, .my-4 {
+    margin-bottom: 0.5rem!important;
+  }
+  
+  
+  .card{
+    background-color: rgba(104, 101, 111, 0.57);
+  }
+  
+  .grid-box {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1rem;
+    margin-bottom: 2rem;
+    }
+    
+    .grid-box .box {
+    background-color: #fff;
+    color: #000;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
+    
+    .grid-box .box .label {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    }
+    
+    @media (min-width: 360px) {
+    .grid-box {
+    grid-template-columns: repeat(3, 1fr);
+    }
+    }
+    
+    @media (min-width: 768px) {
+    .grid-box {
+    grid-template-columns: repeat(6, 1fr);
+    }
+    }  
+
+
+ /* adjust positioning of section1 and section2 */
+ .section1,
+ .section2 {
+ padding: 2rem;
+ padding-bottom: 0rem;
+ box-sizing: border-box;
+ }
+ 
+.card-body {
+ -ms-flex: 1 1 auto;
+ flex: 1 1 auto;
+ min-height: 1px;
+ padding: 1.25rem;
+ padding-top: 0.5rem;
+}
+
+ .section1 {
+ grid-row: 1;
+ }
+ 
+ .section2 {
+ grid-row: 2;
+ padding-top: 0.5rem;
+ }
+ 
+ @media (min-width: 576px) {
+ .section1,
+ .section2 {
+ padding: 1rem;
+ }
+ }
+ 
+ /* style changes for the first box */
+ .co2-value {
+    color: #fff;
+    font-size: 4rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 0;
+    font-family: 'algae-tree-bold-paragraph-font';
+ }
+ 
+ .co2-label {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.25rem;
+    text-align: center;
+    font-family: 'algae-tree-light-paragraph-font';
+ }
+ .airco2-value,
+ .airtemp-value,
+ .airhumid-value {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'algae-tree-bold-paragraph-font';
+ }

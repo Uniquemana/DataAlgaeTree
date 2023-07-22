@@ -3,19 +3,67 @@ function createChart(ctx, chartData) {
   // Extract data from the chartData object
   var labels = chartData.labels;
   var co2Values = chartData.datasets[0].data;
+  var air_temp_values = chartData.datasets[1].data;
+  var air_humid_values = chartData.datasets[2].data;
+  var left_water_temp_valaues = chartData.datasets[3].data;
+  var right_water_temp_valaues = chartData.datasets[4].data;
+  var tower_led_pwm = chartData.datasets[5].data;
 
   // Create the chart
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
-      datasets: [{
+      datasets: [
+      {
         label: 'CO2 Data',
         data: co2Values,
         backgroundColor: 'rgba(175, 248, 78, 0.5)',
         borderColor: 'rgba(175, 248, 78, 1)',
         borderWidth: 2
-      }]
+      },
+      {
+        label: 'Air Temperature',
+        data: air_temp_values,
+        backgroundColor:'rgba(239, 98, 98, 0.5)',
+        borderColor: 'rgba(239, 98, 98, 1)',
+        borderWidth: 2,
+        hidden: true
+      },
+      {
+        label: 'Air Humidity',
+        data: air_humid_values,
+        backgroundColor:'rgba(79, 192, 208, 0.5)',
+        borderColor: 'rgba(79, 192, 208, 1)',
+        borderWidth: 2,
+        hidden: true
+      },
+      {
+        label: 'Left Water Temperature',
+        data: left_water_temp_valaues,
+        backgroundColor:'rgba(20, 195, 142, 0.5)',
+        borderColor: 'rgba(20, 195, 142, 1)',
+        borderWidth: 2,
+        hidden: true
+        
+      },
+      {
+        label: 'Right Water Temperature',
+        data: right_water_temp_valaues,
+        backgroundColor:'rgba(79, 192, 208, 0.5)',
+        borderColor: 'rgba(79, 192, 208, 1)',
+        borderWidth: 2,
+        hidden: true
+      },
+      {
+        label: 'Tower LED PWM',
+        data: tower_led_pwm,
+        backgroundColor:'rgba(79, 192, 208, 0.5)',
+        borderColor: 'rgba(79, 192, 208, 1)',
+        borderWidth: 2,
+        hidden: true
+      }
+    ]
     },
     options: {
       responsive: true,

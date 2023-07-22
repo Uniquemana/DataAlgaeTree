@@ -16,6 +16,34 @@ app = Flask(__name__)
 def scan():
     return render_template('scan.html')
 
+@app.route('/')
+def device_manager():
+    # Fetch all devices and their data from Google Sheets
+    data = sheet.get_all_values()
+
+    # Get header row
+    header = data[0]
+
+    # Prepare the data for each device
+    devices = []
+    for row in data[1:]:
+        device_info = dict(zip(header, row))
+        device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
+        devices.append(device_info)
+
+    # Filter the devices to get the last data of each device
+    last_data_per_device = {}
+    for device in devices:
+        device_id = device['deviceID']
+        if device_id not in last_data_per_device:
+            last_data_per_device[device_id] = device
+        elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
+            last_data_per_device[device_id] = device
+
+    return render_template('deviceManager.html', devices=last_data_per_device.values())
+
+
+
 @app.route('/<deviceID>')
 def show_data(deviceID):
     if deviceID == 'favicon.ico':
@@ -26,6 +54,12 @@ def show_data(deviceID):
 
     # Get header row
     header = data[0]
+
+    #Currently generating grams of CO2
+    grams_co2 = 30
+
+    #Currentyl collecting in ppm
+    collecting_co2_ppm = 347
 
     # Find the rows with the matching deviceID
     filtered_data = []
@@ -51,11 +85,17 @@ def show_data(deviceID):
             'tower_led_pwm': [int(row['tower_led_pwm']) for row in filtered_data],
             'timestamp': [datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S') for row in filtered_data]
         }
+    
 
 
           # Prepare the data for Chart.js
         labels = [timestamp.strftime('%m-%d %H:%M') for timestamp in device_info['timestamp']]
         co2_values = device_info['CO2']
+        air_temp_values = device_info['air_temp']
+        air_humid_values = device_info['air_humid']
+        left_water_temp = device_info['left_water_temp']
+        right_water_temp = device_info['right_water_temp']
+        tower_led_pwm = device_info['tower_led_pwm']
 
         # Render the data as JSON
         chart_data = {
@@ -67,15 +107,62 @@ def show_data(deviceID):
                     'backgroundColor': 'rgba(175, 248, 78, 0.5)',
                     'borderColor': 'rgba(175, 248, 78, 1)',
                     'borderWidth': 2
+                },
+                {
+                    'label': 'air_temp',
+                    'data': air_temp_values,
+                    'backgroundColor': 'rgba(239, 98, 98, 0.5)',
+                    'borderColor': 'rgba(239, 98, 98, 1)',
+                    'borderWidth': 2
+                },
+                {
+                    'label': 'air_humid',
+                    'data': air_humid_values,
+                    'backgroundColor': 'rgba(239, 98, 98, 0.5)',
+                    'borderColor': 'rgba(239, 98, 98, 1)',
+                    'borderWidth': 2
+                },
+                {
+                    'label': 'left_water_temp',
+                    'data': left_water_temp,
+                    'backgroundColor': 'rgba(20, 195, 142, 0.5)',
+                    'borderColor': 'rgba(20, 195, 142, 1)',
+                    'borderWidth': 2
+                },
+                {
+                    'label': 'right_water_temp',
+                    'data': right_water_temp,
+                    'backgroundColor': 'rgba(20, 195, 189, 0.5)',
+                    'borderColor': 'rgba(20, 195, 189, 1)',
+                    'borderWidth': 2
+                },
+                {
+                    'label': 'tower_led_pwm',
+                    'data': tower_led_pwm,
+                    'backgroundColor': 'rgba(221, 88, 214, 0.5)',
+                    'borderColor': 'rgba(221, 88, 214, 1)',
+                    'borderWidth': 2
                 }
             ]
         }
 
         # Convert the chart data to JSON format with proper escaping
         co2_values = device_info['CO2']
+        air_temp_values = device_info['air_temp']
+        air_humid_values = device_info['air_humid']
+        left_water_temp = device_info['left_water_temp']
+        right_water_temp = device_info['right_water_temp']
+        tower_led_pwm = device_info['tower_led_pwm']
+
         print("CO2 values:", co2_values)
+        print("Air Temperature values:", air_temp_values)
+        print("Air Humidity values:", air_humid_values)
+        print("Air Left Water Temperature values:", left_water_temp)
+        print("Air Right Water Temperature values:", right_water_temp)
+        print("Tower LED pwm values:", tower_led_pwm)
+
         chart_json = json.dumps(chart_data, indent=None)
-        return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json)
+        return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json, collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2)
 
 
 @app.route('/', methods=['GET', 'POST'])
