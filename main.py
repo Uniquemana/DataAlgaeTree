@@ -24,11 +24,16 @@ def device_manager():
     # Get header row
     header = data[0]
 
-    # Prepare the data for each device
+     # Prepare the data for each device
     devices = []
     for row in data[1:]:
         device_info = dict(zip(header, row))
-        device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
+        try:
+            device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
+        except ValueError as e:
+            # Log the timestamp that caused the error for debugging purposes
+            print(f"Error parsing timestamp: {device_info['timestamp']}, Error: {e}")
+            # You may also consider setting a default timestamp or skipping the data with an incorrect timestamp
         devices.append(device_info)
 
     # Filter the devices to get the last data of each device
