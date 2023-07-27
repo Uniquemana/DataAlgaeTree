@@ -160,13 +160,6 @@ def show_data(deviceID):
         right_water_temp = device_info['right_water_temp']
         tower_led_pwm = device_info['tower_led_pwm']
 
-        # print("CO2 values:", co2_values)
-        # print("Air Temperature values:", air_temp_values)
-        # print("Air Humidity values:", air_humid_values)
-        # print("Air Left Water Temperature values:", left_water_temp)
-        # print("Air Right Water Temperature values:", right_water_temp)
-        # print("Tower LED pwm values:", tower_led_pwm)
-
         chart_json = json.dumps(chart_data, indent=None)
         return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json, collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2)
 
