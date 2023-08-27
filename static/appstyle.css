@@ -175,7 +175,7 @@ h5{
   /* adjust positioning of the chart container */
   .chart-container {
   margin-top: 0rem;
-  min-height: 35rem;
+  /* min-height: 35rem; */
   }
   
   @media (min-width: 576px) {
@@ -215,157 +215,8 @@ h5{
 }
   
 
-/* @font-face{
-  font-family: 'algae-tree-main-font';
-  src: url('fonts/Arual.ttf')  format('truetype');
-}
-
-@font-face{
-  font-family: 'algae-tree-light-paragraph-font';
-  src: url('fonts/CeraProLight.otf')  format('opentype');
-}
-
-@font-face{
-  font-family: 'algae-tree-bold-paragraph-font';
-  src: url('fonts/CeraProBold.otf')  format('opentype');
-}
-*/
-
 
 body {
-  /* font-family: 'Poppins', sans-serif; */
   font-size: 16px;
   color: #f2f2f2;
 }
-
-/*
-.bgsections{
-  position: static;
-  display: grid;
-  height: auto;
-  width: 100%;
-  min-height: 3751px;
-  grid-template-rows: repeat(7, min-content) 2fr;
-  grid-template-columns: 100%;
-  padding-bottom: 0px;
-  box-sizing: border-box;
-  
-}
-
-
-h1 {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-  font-family: 'algae-tree-main-font';
-}
-
-h5{
-  font-family: 'algae-tree-main-font';
-  font-size: 25px;
-}
-
-.card{
-  background-color: rgba(104, 101, 111, 0.57);
-}
-
-.chart-container {
-  width: 100%;
-  margin: 0 auto;
-  height: 30em;
-  float: right;
-}
-
-.data-container {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  display: flex;
-  justify-content: center;
-  background-color: #f44336;
-}
-
-.data-container-inside {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-}
-
-.airtemp-item,
-.airhumid-item,
-.co2-item {
-  margin-right: 30px;
-}
-
-.airtemp-label,
-.airhumid-label,
-.co2-label {
-  font-family: 'algae-tree-light-paragraph-font';
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.airtemp-value,
-.airhumid-value,
-.co2-value {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  padding: 10px 20px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  font-family: 'algae-tree-bold-paragraph-font';
-}
-
-.airtemp-value.low {
-  color: #2196f3;
-  background-color: #e3f2fd;
-}
-
-.airtemp-value.moderate {
-  color: #ffc107;
-  background-color: #fff8e1;
-}
-
-.airtemp-value.high {
-  color: #f44336;
-  background-color: #ffebee;
-}
-
-.airhumid-value.low {
-  color: #2196f3;
-  background-color: #e3f2fd;
-}
-
-.airhumid-value.moderate {
-  color: #ffc107;
-  background-color: #fff8e1;
-}
-
-.airhumid-value.high {
-  color: #f44336;
-  background-color: #ffebee;
-}
-
-.co2-value.low {
-  color: #2196f3;
-  background-color: #e3f2fd;
-}
-
-.co2-value.moderate {
-  color: #ffc107;
-  background-color: #fff8e1;
-}
-
-.co2-value.high {
-  color: #f44336;
-  background-color: #ffebee;
-}
- */

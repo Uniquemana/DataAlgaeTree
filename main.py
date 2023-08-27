@@ -46,6 +46,12 @@ def device_manager():
         elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
             last_data_per_device[device_id] = device
 
+    # Round CO2 values for display
+    for device in last_data_per_device.values():
+        device['CO2'] = round(float(device['CO2']))
+        device['air_temp'] = round(float(device['air_temp']))
+        device['air_humid'] = round(float(device['air_humid']))
+
     return render_template('deviceManager.html', devices=last_data_per_device.values())
 
 
@@ -79,9 +85,9 @@ def show_data(deviceID):
         # Extract relevant data fields for display
         device_info = {
             'deviceID': [row['deviceID'] for row in filtered_data],
-            'CO2': [float(row['CO2']) for row in filtered_data],
-            'air_temp': [float(row['air_temp']) for row in filtered_data],
-            'air_humid': [float(row['air_humid']) for row in filtered_data],
+            'CO2': [round(float(row['CO2'])) for row in filtered_data],  # Rounded CO2 value
+            'air_temp': [round(float(row['air_temp'])) for row in filtered_data],  # Rounded air_temp value
+            'air_humid': [round(float(row['air_humid'])) for row in filtered_data],  # Rounded air_humid value
             'left_water_temp': [float(row['left_water_temp']) for row in filtered_data],
             'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],
             'left_heater_temp': [float(row['left_heater_temp']) for row in filtered_data],
@@ -102,6 +108,12 @@ def show_data(deviceID):
         left_water_temp = device_info['left_water_temp']
         right_water_temp = device_info['right_water_temp']
         tower_led_pwm = device_info['tower_led_pwm']
+
+        # Extract timestamps for counting unique days
+        timestamps = device_info['timestamp']
+
+        # Count unique days
+        unique_day_count = count_unique_days(timestamps)
 
         # Render the data as JSON
         chart_data = {
@@ -161,7 +173,7 @@ def show_data(deviceID):
         tower_led_pwm = device_info['tower_led_pwm']
 
         chart_json = json.dumps(chart_data, indent=None)
-        return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json, collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2)
+        return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json, collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2, unique_day_count=unique_day_count)
 
 
 # Function to validate if a float value is valid (non-NaN, finite, and within a specific range)
@@ -190,6 +202,13 @@ def is_valid_int(value, min_val=None, max_val=None):
 
     return True
 
+#Counts the active days for the device based on unique day timestamp
+def count_unique_days(timestamps):
+    unique_days = set()
+    for timestamp in timestamps:
+        unique_days.add(timestamp.date())
+    return len(unique_days)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.headers.get('Content-Type') == 'application/json':
@@ -198,7 +217,7 @@ def index():
 
             # Validate deviceID
             deviceID = float(data['deviceID'])
-            if not is_valid_float(deviceID, min_val=1000, max_val=2000):
+            if not is_valid_float(deviceID, min_val=1000, max_val=1003):
                 print("Invalid deviceID")
                 return "Invalid data: Invalid deviceID"
 

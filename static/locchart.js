@@ -9,6 +9,9 @@ function createChart(ctx, chartData) {
   var right_water_temp_valaues = chartData.datasets[4].data;
   var tower_led_pwm = chartData.datasets[5].data;
 
+  // const currentTime = new Date();
+  // const minDate = new Date(currentTime - 500 * 60 * 60 * 1000); // 48 hours in milliseconds
+
   // Create the chart
   new Chart(ctx, {
     type: 'line',
@@ -16,6 +19,8 @@ function createChart(ctx, chartData) {
       labels: labels,
       datasets: [
       {
+        pointRadius: 0, // disable for a single dataset
+        spanGaps: true, // enable for a single dataset
         label: 'CO2 Data',
         data: co2Values,
         backgroundColor: 'rgba(175, 248, 78, 0.5)',
@@ -67,7 +72,21 @@ function createChart(ctx, chartData) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false
+      // maintainAspectRatio: false,
+      // animation: false,
+      // spanGaps: true, // enable for all datasets
+      // scales: {
+      //   x: {
+      //     type: 'time',
+      //     time: {
+      //         parser: function(value) {
+      //             return moment(value, 'MM-DD HH:mm'); // Adjust the format as needed
+      //         },
+      //         min: minDate,
+      //         unit: 'hour'
+      //     }
+      //   }
+      // }
     }
   });
 }
