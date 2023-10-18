@@ -9,7 +9,7 @@ import json
 scope = ['https://www.googleapis.com/auth/spreadsheets', "https://www.googleapis.com/auth/drive"]
 credentials = ServiceAccountCredentials.from_json_keyfile_name("dataalgaetreegsheets-388ac829236c.json", scope)
 client = gspread.authorize(credentials)
-sheet = client.open("DATq1").sheet1
+spreadsheet = client.open("DATq1")
 
 app = Flask(__name__)
 
@@ -19,40 +19,48 @@ def scan():
 
 @app.route('/')
 def device_manager():
-    # Fetch all devices and their data from Google Sheets
-    data = sheet.get_all_values()
+    try:
+        # Fetch all devices and their data from Google Sheets
+        spreadsheet = client.open("DATq1")
+        worksheet = spreadsheet.sheet1  # Assuming you want to fetch data from the first worksheet
+        data = worksheet.get_all_values()
 
-    # Get header row
-    header = data[0]
+        # Get header row
+        header = data[0]
 
-     # Prepare the data for each device
-    devices = []
-    for row in data[1:]:
-        device_info = dict(zip(header, row))
-        try:
-            device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
-        except ValueError as e:
-            # Log the timestamp that caused the error for debugging purposes
-            print(f"Error parsing timestamp: {device_info['timestamp']}, Error: {e}")
-            # You may also consider setting a default timestamp or skipping the data with an incorrect timestamp
-        devices.append(device_info)
+        # Prepare the data for each device
+        devices = []
+        for row in data[1:]:
+            device_info = dict(zip(header, row))
+            try:
+                device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
+            except ValueError as e:
+                # Log the timestamp that caused the error for debugging purposes
+                print(f"Error parsing timestamp: {device_info['timestamp']}, Error: {e}")
+                # You may also consider setting a default timestamp or skipping the data with an incorrect timestamp
+            devices.append(device_info)
 
-    # Filter the devices to get the last data of each device
-    last_data_per_device = {}
-    for device in devices:
-        device_id = device['deviceID']
-        if device_id not in last_data_per_device:
-            last_data_per_device[device_id] = device
-        elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
-            last_data_per_device[device_id] = device
+        # Filter the devices to get the last data of each device
+        last_data_per_device = {}
+        for device in devices:
+            device_id = device['deviceID']
+            if device_id not in last_data_per_device:
+                last_data_per_device[device_id] = device
+            elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
+                last_data_per_device[device_id] = device
 
-    # Round CO2 values for display
-    for device in last_data_per_device.values():
-        device['CO2'] = round(float(device['CO2']))
-        device['air_temp'] = round(float(device['air_temp']))
-        device['air_humid'] = round(float(device['air_humid']))
+        # Round CO2 values for display
+        for device in last_data_per_device.values():
+            device['CO2'] = round(float(device['CO2']))
+            device['air_temp'] = round(float(device['air_temp']))
+            device['air_humid'] = round(float(device['air_humid']))
 
-    return render_template('deviceManager.html', devices=last_data_per_device.values())
+        return render_template('deviceManager.html', devices=last_data_per_device.values())
+
+    except Exception as e:
+        print('Error:', e)
+        return 'An error occurred while fetching data from the database'
+
 
 
 
@@ -61,120 +69,139 @@ def show_data(deviceID):
     if deviceID == 'favicon.ico':
         return ''
 
-    # Fetch data from Google Sheets including header
-    data = sheet.get_all_values()
+    try:
+        # Fetch data from Google Sheets including header
+        spreadsheet = client.open("DATq1")
+        worksheet = spreadsheet.sheet1  # Assuming you want to fetch data from the first worksheet
+        data = worksheet.get_all_values()
 
-    # Get header row
-    header = data[0]
+        # Get header row
+        header = data[0]
 
-    #Currently generating grams of CO2
-    grams_co2 = 30
+        # Currently generating grams of CO2
+        grams_co2 = 30
 
-    #Currentyl collecting in ppm
-    collecting_co2_ppm = 347
+        # Currently collecting in ppm
+        collecting_co2_ppm = 347
 
-    # Find the rows with the matching deviceID
-    filtered_data = []
-    for row in data[1:]:
-        if row[0] == deviceID:  # Compare the first column as strings
-            filtered_data.append(dict(zip(header, row)))
+        # Find the rows with the matching deviceID
+        filtered_data = []
+        for row in data[1:]:
+            if row[0] == deviceID:  # Compare the first column as strings
+                filtered_data.append(dict(zip(header, row)))
 
-    if not filtered_data:
-        return render_template('no_data.html', deviceID=deviceID)
-    else:
-        # Extract relevant data fields for display
-        device_info = {
-            'deviceID': [row['deviceID'] for row in filtered_data],
-            'CO2': [round(float(row['CO2'])) for row in filtered_data],  # Rounded CO2 value
-            'air_temp': [round(float(row['air_temp'])) for row in filtered_data],  # Rounded air_temp value
-            'air_humid': [round(float(row['air_humid'])) for row in filtered_data],  # Rounded air_humid value
-            'left_water_temp': [float(row['left_water_temp']) for row in filtered_data],
-            'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],
-            'left_heater_temp': [float(row['left_heater_temp']) for row in filtered_data],
-            'right_heater_temp': [float(row['right_heater_temp']) for row in filtered_data],
-            'left_heater_pwm': [int(row['left_heater_pwm']) for row in filtered_data],
-            'right_heater_pwm': [int(row['right_heater_pwm']) for row in filtered_data],
-            'tower_led_pwm': [int(row['tower_led_pwm']) for row in filtered_data],
-            'timestamp': [datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S') for row in filtered_data]
-        }
-    
+        if not filtered_data:
+            return render_template('no_data.html', deviceID=deviceID)
+        else:
+            # Extract relevant data fields for display
+            device_info = {
+                'deviceID': [row['deviceID'] for row in filtered_data],
+                'CO2': [round(float(row['CO2'])) for row in filtered_data],  # Rounded CO2 value
+                'air_temp': [round(float(row['air_temp'])) for row in filtered_data],  # Rounded air_temp value
+                'air_humid': [round(float(row['air_humid'])) for row in filtered_data],  # Rounded air_humid value
+                'left_water_temp': [float(row['left_water_temp']) for row in filtered_data],
+                'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],
+                'left_heater_temp': [float(row['left_heater_temp']) for row in filtered_data],
+                'right_heater_temp': [float(row['right_heater_temp']) for row in filtered_data],
+                'left_heater_pwm': [int(row['left_heater_pwm']) for row in filtered_data],
+                'right_heater_pwm': [int(row['right_heater_pwm']) for row in filtered_data],
+                'tower_led_pwm': [int(row['tower_led_pwm']) for row in filtered_data],
+                'timestamp': [datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S') for row in filtered_data]
+            }
 
+            # Prepare the data for Chart.js
+            labels = [timestamp.strftime('%m-%d %H:%M') for timestamp in device_info['timestamp']]
+            co2_values = device_info['CO2']
+            air_temp_values = device_info['air_temp']
+            air_humid_values = device_info['air_humid']
+            left_water_temp = device_info['left_water_temp']
+            right_water_temp = device_info['right_water_temp']
+            tower_led_pwm = device_info['tower_led_pwm']
 
-          # Prepare the data for Chart.js
-        labels = [timestamp.strftime('%m-%d %H:%M') for timestamp in device_info['timestamp']]
-        co2_values = device_info['CO2']
-        air_temp_values = device_info['air_temp']
-        air_humid_values = device_info['air_humid']
-        left_water_temp = device_info['left_water_temp']
-        right_water_temp = device_info['right_water_temp']
-        tower_led_pwm = device_info['tower_led_pwm']
+            # Extract timestamps for counting unique days
+            timestamps = device_info['timestamp']
 
-        # Extract timestamps for counting unique days
-        timestamps = device_info['timestamp']
+            # Count unique days
+            unique_day_count = count_unique_days(timestamps)
 
-        # Count unique days
-        unique_day_count = count_unique_days(timestamps)
+            # Render the data as JSON
+            chart_data = {
+                'labels': labels,
+                'datasets': [
+                    {
+                        'label': 'CO2 Data',
+                        'data': co2_values,
+                        'backgroundColor': 'rgba(175, 248, 78, 0.5)',
+                        'borderColor': 'rgba(175, 248, 78, 1)',
+                        'borderWidth': 2
+                    },
+                    {
+                        'label': 'air_temp',
+                        'data': air_temp_values,
+                        'backgroundColor': 'rgba(239, 98, 98, 0.5)',
+                        'borderColor': 'rgba(239, 98, 98, 1)',
+                        'borderWidth': 2
+                    },
+                    {
+                        'label': 'air_humid',
+                        'data': air_humid_values,
+                        'backgroundColor': 'rgba(239, 98, 98, 0.5)',
+                        'borderColor': 'rgba(239, 98, 98, 1)',
+                        'borderWidth': 2
+                    },
+                    {
+                        'label': 'left_water_temp',
+                        'data': left_water_temp,
+                        'backgroundColor': 'rgba(20, 195, 142, 0.5)',
+                        'borderColor': 'rgba(20, 195, 142, 1)',
+                        'borderWidth': 2
+                    },
+                    {
+                        'label': 'right_water_temp',
+                        'data': right_water_temp,
+                        'backgroundColor': 'rgba(20, 195, 189, 0.5)',
+                        'borderColor': 'rgba(20, 195, 189, 1)',
+                        'borderWidth': 2
+                    },
+                    {
+                        'label': 'tower_led_pwm',
+                        'data': tower_led_pwm,
+                        'backgroundColor': 'rgba(221, 88, 214, 0.5)',
+                        'borderColor': 'rgba(221, 88, 214, 1)',
+                        'borderWidth': 2
+                    }
+                ]
+            }
 
-        # Render the data as JSON
-        chart_data = {
-            'labels': labels,
-            'datasets': [
-                {
-                    'label': 'CO2 Data',
-                    'data': co2_values,
-                    'backgroundColor': 'rgba(175, 248, 78, 0.5)',
-                    'borderColor': 'rgba(175, 248, 78, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'air_temp',
-                    'data': air_temp_values,
-                    'backgroundColor': 'rgba(239, 98, 98, 0.5)',
-                    'borderColor': 'rgba(239, 98, 98, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'air_humid',
-                    'data': air_humid_values,
-                    'backgroundColor': 'rgba(239, 98, 98, 0.5)',
-                    'borderColor': 'rgba(239, 98, 98, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'left_water_temp',
-                    'data': left_water_temp,
-                    'backgroundColor': 'rgba(20, 195, 142, 0.5)',
-                    'borderColor': 'rgba(20, 195, 142, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'right_water_temp',
-                    'data': right_water_temp,
-                    'backgroundColor': 'rgba(20, 195, 189, 0.5)',
-                    'borderColor': 'rgba(20, 195, 189, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'tower_led_pwm',
-                    'data': tower_led_pwm,
-                    'backgroundColor': 'rgba(221, 88, 214, 0.5)',
-                    'borderColor': 'rgba(221, 88, 214, 1)',
-                    'borderWidth': 2
-                }
-            ]
-        }
+            # Convert the chart data to JSON format with proper escaping
+            co2_values = device_info['CO2']
+            air_temp_values = device_info['air_temp']
+            air_humid_values = device_info['air_humid']
+            left_water_temp = device_info['left_water_temp']
+            right_water_temp = device_info['right_water_temp']
+            tower_led_pwm = device_info['tower_led_pwm']
 
-        # Convert the chart data to JSON format with proper escaping
-        co2_values = device_info['CO2']
-        air_temp_values = device_info['air_temp']
-        air_humid_values = device_info['air_humid']
-        left_water_temp = device_info['left_water_temp']
-        right_water_temp = device_info['right_water_temp']
-        tower_led_pwm = device_info['tower_led_pwm']
+            chart_json = json.dumps(chart_data, indent=None)
+            return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json,
+                                   collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2,
+                                   unique_day_count=unique_day_count)
 
-        chart_json = json.dumps(chart_data, indent=None)
-        return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json, collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2, unique_day_count=unique_day_count)
+    except Exception as e:
+        print('Error:', e)
+        return 'An error occurred while fetching data from the database'
 
+# Function to check if a sheet with the given title exists
+def sheet_exists(spreadsheet, title):
+    try:
+        worksheet = spreadsheet.worksheet(title)
+        return True
+    except gspread.exceptions.WorksheetNotFound:
+        return False
+
+# Function to create a new sheet with the given title
+def create_sheet(spreadsheet, title):
+    worksheet = spreadsheet.add_worksheet(title, rows=1, cols=1)
+    return worksheet.title
 
 # Function to validate if a float value is valid (non-NaN, finite, and within a specific range)
 def is_valid_float(value, min_val=None, max_val=None):
@@ -217,9 +244,9 @@ def index():
 
             # Validate deviceID
             deviceID = float(data['deviceID'])
-            if not is_valid_float(deviceID, min_val=1000, max_val=1003):
-                print("Invalid deviceID")
-                return "Invalid data: Invalid deviceID"
+            # if not is_valid_float(deviceID, min_val=1000, max_val=1003):
+            #     print("Invalid deviceID")
+            #     return "Invalid data: Invalid deviceID"
 
             # Validate CO2
             co2 = float(data['CO2'])
@@ -314,8 +341,22 @@ def index():
                 print("Timestamp difference exceeds 12 hours")
                 return "Invalid data: Timestamp difference exceeds 12 hours"
 
+             # Extracted the sheet ID creation logic to a separate function
+            def create_or_get_sheet(spreadsheet, device_id):
+                sheet_title = str(int(device_id))
+                if not sheet_exists(spreadsheet, sheet_title):
+                    return create_sheet(spreadsheet, sheet_title)
+                else:
+                    return sheet_title
+
+            # Check if the sheet with the device ID exists, create it if not
+            sheet_id = create_or_get_sheet(spreadsheet, deviceID)
+
+            # Get the worksheet based on the sheet_id
+            worksheet = spreadsheet.worksheet(sheet_id)
+
             # Append the data to the Google Sheet
-            response = sheet.append_row([deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, left_heater_temp, right_heater_temp, left_heater_pwm, right_heater_pwm, tower_led_pwm, timestamp])
+            response = worksheet.append_row([deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, left_heater_temp, right_heater_temp, left_heater_pwm, right_heater_pwm, tower_led_pwm, timestamp])
             print('Response from append_row:', response)
 
             return 'Data received successfully'
