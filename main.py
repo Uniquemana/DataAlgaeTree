@@ -296,29 +296,29 @@ def index():
                 print("Invalid right_water_temp")
                 return "Invalid data: Invalid right_water_temp"
 
-            # Validate left_heater_temp
-            left_heater_temp = float(data['left_heater_temp'])
-            if not is_valid_float(left_heater_temp, min_val=-50, max_val=300):
-                print("Invalid left_heater_temp")
-                return "Invalid data: Invalid left_heater_temp"
+            # # Validate left_heater_temp
+            # left_heater_temp = float(data['left_heater_temp'])
+            # if not is_valid_float(left_heater_temp, min_val=-50, max_val=300):
+            #     print("Invalid left_heater_temp")
+            #     return "Invalid data: Invalid left_heater_temp"
 
-            # Validate right_heater_temp
-            right_heater_temp = float(data['right_heater_temp'])
-            if not is_valid_float(right_heater_temp, min_val=-50, max_val=300):
-                print("Invalid right_heater_temp")
-                return "Invalid data: Invalid right_heater_temp"
+            # # Validate right_heater_temp
+            # right_heater_temp = float(data['right_heater_temp'])
+            # if not is_valid_float(right_heater_temp, min_val=-50, max_val=300):
+            #     print("Invalid right_heater_temp")
+            #     return "Invalid data: Invalid right_heater_temp"
 
-            # Validate left_heater_pwm
-            left_heater_pwm = int(data['left_heater_pwm'])
-            if not is_valid_int(left_heater_pwm, min_val=0, max_val=255):
-                print("Invalid left_heater_pwm")
-                return "Invalid data: Invalid left_heater_pwm"
+            # # Validate left_heater_pwm
+            # left_heater_pwm = int(data['left_heater_pwm'])
+            # if not is_valid_int(left_heater_pwm, min_val=0, max_val=255):
+            #     print("Invalid left_heater_pwm")
+            #     return "Invalid data: Invalid left_heater_pwm"
 
-            # Validate right_heater_pwm
-            right_heater_pwm = int(data['right_heater_pwm'])
-            if not is_valid_int(right_heater_pwm, min_val=0, max_val=255):
-                print("Invalid right_heater_pwm")
-                return "Invalid data: Invalid right_heater_pwm"
+            # # Validate right_heater_pwm
+            # right_heater_pwm = int(data['right_heater_pwm'])
+            # if not is_valid_int(right_heater_pwm, min_val=0, max_val=255):
+            #     print("Invalid right_heater_pwm")
+            #     return "Invalid data: Invalid right_heater_pwm"
 
             # Validate tower_led_pwm
             tower_led_pwm = int(data['tower_led_pwm'])
