@@ -20,46 +20,56 @@ def scan():
 @app.route('/')
 def device_manager():
     try:
-        # Fetch all devices and their data from Google Sheets
+        # Get the list of sheets in the spreadsheet
         spreadsheet = client.open("DATq1")
-        worksheet = spreadsheet.sheet1  # Assuming you want to fetch data from the first worksheet
-        data = worksheet.get_all_values()
+        all_sheets = spreadsheet.worksheets()
 
-        # Get header row
-        header = data[0]
+        # Prepare a list to store data for all devices
+        all_devices_data = []
 
-        # Prepare the data for each device
-        devices = []
-        for row in data[1:]:
-            device_info = dict(zip(header, row))
-            try:
-                device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
-            except ValueError as e:
-                # Log the timestamp that caused the error for debugging purposes
-                print(f"Error parsing timestamp: {device_info['timestamp']}, Error: {e}")
-                # You may also consider setting a default timestamp or skipping the data with an incorrect timestamp
-            devices.append(device_info)
+        for sheet in all_sheets:
+            # Fetch data from the current sheet
+            data = sheet.get_all_values()
 
-        # Filter the devices to get the last data of each device
-        last_data_per_device = {}
-        for device in devices:
-            device_id = device['deviceID']
-            if device_id not in last_data_per_device:
-                last_data_per_device[device_id] = device
-            elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
-                last_data_per_device[device_id] = device
+            # Get header row
+            header = data[0]
 
-        # Round CO2 values for display
-        for device in last_data_per_device.values():
-            device['CO2'] = round(float(device['CO2']))
-            device['air_temp'] = round(float(device['air_temp']))
-            device['air_humid'] = round(float(device['air_humid']))
+            # Prepare the data for each device
+            devices = []
+            for row in data[1:]:
+                device_info = dict(zip(header, row))
+                try:
+                    device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
+                except ValueError as e:
+                    # Log the timestamp that caused the error for debugging purposes
+                    print(f"Error parsing timestamp: {device_info['timestamp']}, Error: {e}")
+                    # You may also consider setting a default timestamp or skipping the data with an incorrect timestamp
+                devices.append(device_info)
 
-        return render_template('deviceManager.html', devices=last_data_per_device.values())
+            # Filter the devices to get the last data of each device
+            last_data_per_device = {}
+            for device in devices:
+                device_id = device['deviceID']
+                if device_id not in last_data_per_device:
+                    last_data_per_device[device_id] = device
+                elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
+                    last_data_per_device[device_id] = device
+
+            # Round CO2 values for display
+            for device in last_data_per_device.values():
+                device['CO2'] = round(float(device['CO2']))
+                device['air_temp'] = round(float(device['air_temp']))
+                device['air_humid'] = round(float(device['air_humid']))
+
+            # Add data for the current sheet (device) to the list
+            all_devices_data.extend(last_data_per_device.values())
+
+        return render_template('deviceManager.html', devices=all_devices_data)
 
     except Exception as e:
         print('Error:', e)
         return 'An error occurred while fetching data from the database'
+
 
 
 
@@ -70,9 +80,17 @@ def show_data(deviceID):
         return ''
 
     try:
-        # Fetch data from Google Sheets including header
+        # Fetch the sheet corresponding to the deviceID
         spreadsheet = client.open("DATq1")
-        worksheet = spreadsheet.sheet1  # Assuming you want to fetch data from the first worksheet
+        worksheet = None
+
+        # Check if the sheet with the given deviceID exists
+        try:
+            worksheet = spreadsheet.worksheet(deviceID)
+        except gspread.exceptions.WorksheetNotFound:
+            return render_template('no_data.html', deviceID=deviceID)
+
+        # Fetch data from the selected sheet
         data = worksheet.get_all_values()
 
         # Get header row
