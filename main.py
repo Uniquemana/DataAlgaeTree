@@ -286,13 +286,13 @@ def index():
 
             # Validate left_water_temp
             left_water_temp = float(data['left_water_temp'])
-            if not is_valid_float(left_water_temp, min_val=-50, max_val=100):
+            if not is_valid_float(left_water_temp, min_val=-127, max_val=100):
                 print("Invalid left_water_temp")
                 return "Invalid data: Invalid left_water_temp"
 
             # Validate right_water_temp
             right_water_temp = float(data['right_water_temp'])
-            if not is_valid_float(right_water_temp, min_val=-50, max_val=100):
+            if not is_valid_float(right_water_temp, min_val=-127, max_val=100):
                 print("Invalid right_water_temp")
                 return "Invalid data: Invalid right_water_temp"
 
