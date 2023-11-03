@@ -17,6 +17,7 @@ app = Flask(__name__)
 def scan():
     return render_template('scan.html')
 
+#Device Manager
 @app.route('/')
 def device_manager():
     try:
@@ -70,10 +71,7 @@ def device_manager():
         print('Error:', e)
         return 'An error occurred while fetching data from the database'
 
-
-
-
-
+# Device data
 @app.route('/<deviceID>')
 def show_data(deviceID):
     if deviceID == 'favicon.ico':
@@ -118,11 +116,7 @@ def show_data(deviceID):
                 'air_temp': [round(float(row['air_temp'])) for row in filtered_data],  # Rounded air_temp value
                 'air_humid': [round(float(row['air_humid'])) for row in filtered_data],  # Rounded air_humid value
                 'left_water_temp': [float(row['left_water_temp']) for row in filtered_data],
-                'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],
-                'left_heater_temp': [float(row['left_heater_temp']) for row in filtered_data],
-                'right_heater_temp': [float(row['right_heater_temp']) for row in filtered_data],
-                'left_heater_pwm': [int(row['left_heater_pwm']) for row in filtered_data],
-                'right_heater_pwm': [int(row['right_heater_pwm']) for row in filtered_data],
+                'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],                
                 'tower_led_pwm': [int(row['tower_led_pwm']) for row in filtered_data],
                 'timestamp': [datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S') for row in filtered_data]
             }
@@ -374,7 +368,7 @@ def index():
             worksheet = spreadsheet.worksheet(sheet_id)
 
             # Append the data to the Google Sheet
-            response = worksheet.append_row([deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, left_heater_temp, right_heater_temp, left_heater_pwm, right_heater_pwm, tower_led_pwm, timestamp])
+            response = worksheet.append_row([deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, tower_led_pwm, timestamp])
             print('Response from append_row:', response)
 
             return 'Data received successfully'
