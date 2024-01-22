@@ -31,133 +31,7 @@ def device_manager():
 # Device data
 @app.route('/<deviceID>')
 def show_data(deviceID):
-    if deviceID == 'favicon.ico':
-        return ''
-
-    try:
-        # Fetch the sheet corresponding to the deviceID
-        spreadsheet = client.open("DATq1")
-        worksheet = None
-
-        # Check if the sheet with the given deviceID exists
-        try:
-            worksheet = spreadsheet.worksheet(deviceID)
-        except gspread.exceptions.WorksheetNotFound:
-            return render_template('no_data.html', deviceID=deviceID)
-
-        # Fetch data from the selected sheet
-        data = worksheet.get_all_values()
-
-        # Get header row
-        header = data[0]
-
-        # Currently generating grams of CO2
-        grams_co2 = 30
-
-        # Currently collecting in ppm
-        collecting_co2_ppm = 347
-
-        # Find the rows with the matching deviceID
-        filtered_data = []
-        for row in data[1:]:
-            if row[0] == deviceID:  # Compare the first column as strings
-                filtered_data.append(dict(zip(header, row)))
-
-        if not filtered_data:
-            return render_template('no_data.html', deviceID=deviceID)
-        else:
-            # Extract relevant data fields for display
-            device_info = {
-                'deviceID': [row['deviceID'] for row in filtered_data],
-                'CO2': [round(float(row['CO2'])) for row in filtered_data],  # Rounded CO2 value
-                'air_temp': [round(float(row['air_temp'])) for row in filtered_data],  # Rounded air_temp value
-                'air_humid': [round(float(row['air_humid'])) for row in filtered_data],  # Rounded air_humid value
-                'left_water_temp': [float(row['left_water_temp']) for row in filtered_data],
-                'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],
-                'tower_led_pwm': [int(row['tower_led_pwm']) for row in filtered_data],
-                'timestamp': [datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S') for row in filtered_data]
-            }
-
-            # Prepare the data for Chart.js
-            labels = [timestamp.strftime('%m-%d %H:%M') for timestamp in device_info['timestamp']]
-            co2_values = device_info['CO2']
-            air_temp_values = device_info['air_temp']
-            air_humid_values = device_info['air_humid']
-            left_water_temp = device_info['left_water_temp']
-            right_water_temp = device_info['right_water_temp']
-            tower_led_pwm = device_info['tower_led_pwm']
-
-            # Extract timestamps for counting unique days
-            timestamps = device_info['timestamp']
-
-            # Count unique days
-            unique_day_count = count_unique_days(timestamps)
-
-            # Render the data as JSON
-            chart_data = {
-                'labels': labels,
-                'datasets': [
-                    {
-                        'label': 'CO2 Data',
-                        'data': co2_values,
-                        'backgroundColor': 'rgba(175, 248, 78, 0.5)',
-                        'borderColor': 'rgba(175, 248, 78, 1)',
-                        'borderWidth': 2
-                    },
-                    {
-                        'label': 'air_temp',
-                        'data': air_temp_values,
-                        'backgroundColor': 'rgba(239, 98, 98, 0.5)',
-                        'borderColor': 'rgba(239, 98, 98, 1)',
-                        'borderWidth': 2
-                    },
-                    {
-                        'label': 'air_humid',
-                        'data': air_humid_values,
-                        'backgroundColor': 'rgba(239, 98, 98, 0.5)',
-                        'borderColor': 'rgba(239, 98, 98, 1)',
-                        'borderWidth': 2
-                    },
-                    {
-                        'label': 'left_water_temp',
-                        'data': left_water_temp,
-                        'backgroundColor': 'rgba(20, 195, 142, 0.5)',
-                        'borderColor': 'rgba(20, 195, 142, 1)',
-                        'borderWidth': 2
-                    },
-                    {
-                        'label': 'right_water_temp',
-                        'data': right_water_temp,
-                        'backgroundColor': 'rgba(20, 195, 189, 0.5)',
-                        'borderColor': 'rgba(20, 195, 189, 1)',
-                        'borderWidth': 2
-                    },
-                    {
-                        'label': 'tower_led_pwm',
-                        'data': tower_led_pwm,
-                        'backgroundColor': 'rgba(221, 88, 214, 0.5)',
-                        'borderColor': 'rgba(221, 88, 214, 1)',
-                        'borderWidth': 2
-                    }
-                ]
-            }
-
-            # Convert the chart data to JSON format with proper escaping
-            co2_values = device_info['CO2']
-            air_temp_values = device_info['air_temp']
-            air_humid_values = device_info['air_humid']
-            left_water_temp = device_info['left_water_temp']
-            right_water_temp = device_info['right_water_temp']
-            tower_led_pwm = device_info['tower_led_pwm']
-
-            chart_json = json.dumps(chart_data, indent=None)
-            return render_template('data.html', device_info=device_info, deviceID=deviceID, chart_json=chart_json,
-                                   collecting_co2_ppm=collecting_co2_ppm, grams_co2=grams_co2,
-                                   unique_day_count=unique_day_count)
-
-    except Exception as e:
-        print('Error:', e)
-        return 'An error occurred while fetching data from the database'
+    return DeviceManager.get(deviceID)
 
 
 # Function to check if a sheet with the given title exists
@@ -201,14 +75,6 @@ def is_valid_int(value, min_val=None, max_val=None):
         return False
 
     return True
-
-
-# Counts the active days for the device based on unique day timestamp
-def count_unique_days(timestamps):
-    unique_days = set()
-    for timestamp in timestamps:
-        unique_days.add(timestamp.date())
-    return len(unique_days)
 
 
 @app.route('/', methods=['GET', 'POST'])
