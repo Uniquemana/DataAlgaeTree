@@ -1,9 +1,12 @@
 import math
+
 from flask import Flask, render_template, request
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime, timedelta
 import json
+
+from pages.deviceManager import DeviceManager
 
 # Connect to Google Sheets
 scope = ['https://www.googleapis.com/auth/spreadsheets', "https://www.googleapis.com/auth/drive"]
@@ -13,63 +16,17 @@ spreadsheet = client.open("DATq1")
 
 app = Flask(__name__)
 
+
 @app.route('/scan')
 def scan():
     return render_template('scan.html')
 
-#Device Manager
+
+# Device Manager
 @app.route('/')
 def device_manager():
-    try:
-        # Get the list of sheets in the spreadsheet
-        spreadsheet = client.open("DATq1")
-        all_sheets = spreadsheet.worksheets()
+    return DeviceManager.list()
 
-        # Prepare a list to store data for all devices
-        all_devices_data = []
-
-        for sheet in all_sheets:
-            # Fetch data from the current sheet
-            data = sheet.get_all_values()
-
-            # Get header row
-            header = data[0]
-
-            # Prepare the data for each device
-            devices = []
-            for row in data[1:]:
-                device_info = dict(zip(header, row))
-                try:
-                    device_info['timestamp'] = datetime.strptime(device_info['timestamp'], '%Y-%m-%d %H:%M:%S')
-                except ValueError as e:
-                    # Log the timestamp that caused the error for debugging purposes
-                    print(f"Error parsing timestamp: {device_info['timestamp']}, Error: {e}")
-                    # You may also consider setting a default timestamp or skipping the data with an incorrect timestamp
-                devices.append(device_info)
-
-            # Filter the devices to get the last data of each device
-            last_data_per_device = {}
-            for device in devices:
-                device_id = device['deviceID']
-                if device_id not in last_data_per_device:
-                    last_data_per_device[device_id] = device
-                elif device['timestamp'] > last_data_per_device[device_id]['timestamp']:
-                    last_data_per_device[device_id] = device
-
-            # Round CO2 values for display
-            for device in last_data_per_device.values():
-                device['CO2'] = round(float(device['CO2']))
-                device['air_temp'] = round(float(device['air_temp']))
-                device['air_humid'] = round(float(device['air_humid']))
-
-            # Add data for the current sheet (device) to the list
-            all_devices_data.extend(last_data_per_device.values())
-
-        return render_template('deviceManager.html', devices=all_devices_data)
-
-    except Exception as e:
-        print('Error:', e)
-        return 'An error occurred while fetching data from the database'
 
 # Device data
 @app.route('/<deviceID>')
@@ -116,7 +73,7 @@ def show_data(deviceID):
                 'air_temp': [round(float(row['air_temp'])) for row in filtered_data],  # Rounded air_temp value
                 'air_humid': [round(float(row['air_humid'])) for row in filtered_data],  # Rounded air_humid value
                 'left_water_temp': [float(row['left_water_temp']) for row in filtered_data],
-                'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],                
+                'right_water_temp': [float(row['right_water_temp']) for row in filtered_data],
                 'tower_led_pwm': [int(row['tower_led_pwm']) for row in filtered_data],
                 'timestamp': [datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S') for row in filtered_data]
             }
@@ -202,6 +159,7 @@ def show_data(deviceID):
         print('Error:', e)
         return 'An error occurred while fetching data from the database'
 
+
 # Function to check if a sheet with the given title exists
 def sheet_exists(spreadsheet, title):
     try:
@@ -210,10 +168,12 @@ def sheet_exists(spreadsheet, title):
     except gspread.exceptions.WorksheetNotFound:
         return False
 
+
 # Function to create a new sheet with the given title
 def create_sheet(spreadsheet, title):
     worksheet = spreadsheet.add_worksheet(title, rows=1, cols=1)
     return worksheet.title
+
 
 # Function to validate if a float value is valid (non-NaN, finite, and within a specific range)
 def is_valid_float(value, min_val=None, max_val=None):
@@ -228,6 +188,7 @@ def is_valid_float(value, min_val=None, max_val=None):
 
     return True
 
+
 # Function to validate if an integer value is valid (non-NaN, finite, and within a specific range)
 def is_valid_int(value, min_val=None, max_val=None):
     if not isinstance(value, int) or math.isnan(value) or math.isinf(value):
@@ -241,12 +202,14 @@ def is_valid_int(value, min_val=None, max_val=None):
 
     return True
 
-#Counts the active days for the device based on unique day timestamp
+
+# Counts the active days for the device based on unique day timestamp
 def count_unique_days(timestamps):
     unique_days = set()
     for timestamp in timestamps:
         unique_days.add(timestamp.date())
     return len(unique_days)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -329,12 +292,12 @@ def index():
 
             # Validate individual components of the timestamp
             if (
-                year < 1970 or year > 2030 or
-                month < 1 or month > 12 or
-                day < 1 or day > 31 or
-                hour < 0 or hour > 23 or
-                minute < 0 or minute > 59 or
-                second < 0 or second > 59
+                    year < 1970 or year > 2030 or
+                    month < 1 or month > 12 or
+                    day < 1 or day > 31 or
+                    hour < 0 or hour > 23 or
+                    minute < 0 or minute > 59 or
+                    second < 0 or second > 59
             ):
                 # Handle the error, e.g., log an error message or return a response indicating invalid data
                 print("Invalid timestamp components")
@@ -353,7 +316,7 @@ def index():
                 print("Timestamp difference exceeds 12 hours")
                 return "Invalid data: Timestamp difference exceeds 12 hours"
 
-             # Extracted the sheet ID creation logic to a separate function
+            # Extracted the sheet ID creation logic to a separate function
             def create_or_get_sheet(spreadsheet, device_id):
                 sheet_title = str(int(device_id))
                 if not sheet_exists(spreadsheet, sheet_title):
@@ -368,7 +331,8 @@ def index():
             worksheet = spreadsheet.worksheet(sheet_id)
 
             # Append the data to the Google Sheet
-            response = worksheet.append_row([deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, tower_led_pwm, timestamp])
+            response = worksheet.append_row(
+                [deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, tower_led_pwm, timestamp])
             print('Response from append_row:', response)
 
             return 'Data received successfully'
@@ -383,6 +347,7 @@ def index():
 @app.route('/<path:path>')
 def catch_all(path):
     return render_template('oops.html'), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
