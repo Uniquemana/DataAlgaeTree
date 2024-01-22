@@ -49,9 +49,6 @@ class DeviceManager:
             if not current_device_data:
                 return render_template('no_data.html', deviceID=device_id)
 
-            # id  co2,          air_temp, air_humid, lwt, rwt,  tlp  timestamp
-            # [(1001, 563.5753, 28.76405, 26.71593, 21.0, 22.0, 0.0, datetime.datetime(2023, 11, 15, 21, 9, 27))]
-
             # Extract relevant data fields for display
             device_info = {
                 'deviceID': device_id,

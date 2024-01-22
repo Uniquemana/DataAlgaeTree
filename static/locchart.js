@@ -72,6 +72,18 @@ function createChart(ctx, chartData) {
     },
     options: {
       responsive: true,
+      normalized: true,
+      spanGaps: true,
+      datasets: {
+            line: {
+                pointRadius: 0 // disable for all `'line'` datasets
+            }
+        },
+        elements: {
+            point: {
+                radius: 0 // default to disabled in all datasets
+            }
+        },
       // maintainAspectRatio: false,
       // animation: false,
       // spanGaps: true, // enable for all datasets
@@ -101,15 +113,3 @@ function updateChart(range) {
   var ctx = document.getElementById('co2Chart').getContext('2d');
   createChart(ctx, chartData);
 }
-
-// Function to handle the DOMContentLoaded event
-document.addEventListener('DOMContentLoaded', function () {
-  // Parse the JSON data passed from the Flask app
-  var chartData = JSON.parse('{{ chart_json|safe }}');
-
-  // Get the chart canvas element
-  var canvas = document.getElementById('co2Chart');
-
-  // Create the chart using Chart.js
-  createChart(canvas.getContext('2d'), chartData);
-});
