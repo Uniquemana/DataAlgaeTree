@@ -4,8 +4,8 @@ from flask import Flask, render_template, request
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime, timedelta
-import json
 
+from helpers.mysql import insert_device_data
 from pages.deviceManager import DeviceManager
 
 # Connect to Google Sheets
@@ -200,6 +200,17 @@ def index():
             response = worksheet.append_row(
                 [deviceID, co2, air_temp, air_humid, left_water_temp, right_water_temp, tower_led_pwm, timestamp])
             print('Response from append_row:', response)
+
+            insert_device_data(
+                deviceID,
+                co2,
+                air_temp,
+                air_humid,
+                left_water_temp,
+                right_water_temp,
+                tower_led_pwm,
+                timestamp,
+            )
 
             return 'Data received successfully'
         except Exception as e:

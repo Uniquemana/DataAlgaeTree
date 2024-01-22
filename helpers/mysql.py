@@ -72,3 +72,31 @@ def get_device_data(device_id: str):
     cursor.execute(query, (device_id,))
 
     return cursor.fetchone()
+
+
+def insert_device_data(
+        device_id,
+        co2,
+        air_temp,
+        air_humid,
+        left_water_temp,
+        right_water_temp,
+        tower_led_pwm,
+        timestamp,
+) -> None:
+    cursor = cnx.cursor()
+
+    query = ("""
+        insert into reactor_data 
+        (device_id, co2, air_temp, air_humid, left_water_temp, right_water_temp, tower_led_pwm, timestamp)
+        values (%s, %s, %s, %s, %s, %s, %s, %s)
+    """)
+
+    cursor.execute(
+        query,
+        (device_id, co2, air_temp, air_humid, left_water_temp, right_water_temp, tower_led_pwm, timestamp)
+    )
+
+    cnx.commit()
+
+    return None
