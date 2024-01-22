@@ -6,7 +6,7 @@ from datetime import datetime
 from flask import render_template
 
 from Models.Device import Device
-from helpers.mysql import get_device_list_data, get_device_data, get_device_chart_data
+from helpers.mysql import get_device_list_data, get_device_data, get_device_chart_data, get_device_exists
 
 
 class DeviceManager:
@@ -28,6 +28,9 @@ class DeviceManager:
     def get(device_id: str) -> str:
         if device_id == 'favicon.ico':
             return ''
+
+        if not get_device_exists(device_id):
+            return render_template('no_data.html', deviceID=device_id)
 
         try:
             # Currently generating grams of CO2
