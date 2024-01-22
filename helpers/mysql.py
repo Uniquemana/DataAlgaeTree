@@ -74,6 +74,23 @@ def get_device_data(device_id: str):
     return cursor.fetchone()
 
 
+def get_device_exists(device_id: str) -> bool:
+    cursor = cnx.cursor()
+    query = ("""
+            select 
+                id, name
+            from reactors
+            where name = %s
+            limit 1
+        """)
+
+    cursor.execute(query, (device_id,))
+
+    res = cursor.fetchone()
+
+    return res is not None
+
+
 def insert_device_data(
         device_id,
         co2,
