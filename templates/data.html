@@ -76,7 +76,7 @@
                     <div class="card-body position-relative">
                         <h5 class="card-title text-center mb-4">Data Chart</h5>
                         <div class="chart-container">
-                            <canvas id="co2Chart" height="0"></canvas>
+                            <canvas id="co2Chart"></canvas>
 
                             <div id="loading" class="d-flex align-items-center">
                                 <div class="spinner-grow mx-auto" style="width: 3rem; height: 3rem;" role="status">
@@ -99,12 +99,14 @@
         crossorigin="anonymous"></script>
 <script>
     const el = document.getElementById('co2Chart');
+    const initialHeight = el.height;
+    el.height = 0;
     const ctx = el.getContext('2d');
 
     document.addEventListener('DOMContentLoaded', () => {
         const data = JSON.parse('{{ chart_json|safe }}');
 
-        el.height = 200;
+        el.height = initialHeight;
         createChart(ctx, data);
         document.getElementById('loading').remove();
     });
