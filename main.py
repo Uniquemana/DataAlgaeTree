@@ -158,12 +158,12 @@ def index():
 
             # Validate individual components of the timestamp
             if (
-                    year < 1970 or year > 2030 or
-                    month < 1 or month > 12 or
-                    day < 1 or day > 31 or
-                    hour < 0 or hour > 23 or
-                    minute < 0 or minute > 59 or
-                    second < 0 or second > 59
+                year < 1970 or year > 2030 or
+                month < 1 or month > 12 or
+                day < 1 or day > 31 or
+                hour < 0 or hour > 23 or
+                minute < 0 or minute > 59 or
+                second < 0 or second > 59
             ):
                 # Handle the error, e.g., log an error message or return a response indicating invalid data
                 print("Invalid timestamp components")
